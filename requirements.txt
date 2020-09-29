@@ -1,0 +1,13 @@
+Django~=3.1
+django-crispy-forms~=1.9.2
+django-registration~=3.1
+djangorestframework~=3.11.1
+django-mptt~=0.11.0
+django_compressor
+django_libsass
+django-storages[google]
+Pillow~=7.2.0
+google-cloud-storage~=1.31.0
+gunicorn
+psycopg2
+requests~=2.24.0

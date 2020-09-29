@@ -1,0 +1,163 @@
+{# Base for other templates. #}
+
+{% load static %}
+{% load mptt_tags %}
+{% load compress %}
+<!DOCTYPE html>
+<html lang="EN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {# Compressed SCSS file. #}
+    {% compress css %}
+        <link type="text/x-scss" href="{% static 'scss/main.scss' %}" rel="stylesheet" media="screen">
+    {% endcompress %}
+
+    {# Custom favicon.ico static location. #}
+    <link rel="icon" href="{% static 'img/favicon.ico' %}"/>
+
+    {# Fancybox kit. #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+    {# Main site font. #}
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+
+    {# Font Awesome kit. #}
+    <script src="https://kit.fontawesome.com/1f366812cf.js" crossorigin="anonymous"></script>
+
+    {% if page_title %}
+        <title>Sell It! - {{ page_title }}</title>
+    {% else %}
+        <title>Sell It! - an online marketplace</title>
+    {% endif %}
+</head>
+<body>
+<header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="{% url 'offers-home' %}"><i class="fas fa-spell-check mr-3"></i>Sell It!</a>
+        <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#main_nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="main_nav">
+            <ul class="navbar-nav">
+                <li class="nav-item"> <a class="nav-link" href="{% url 'offers-home' %}">Home</a> </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Categories</a>
+                    <ul class="dropdown-menu">
+                        {% recursetree categories %}
+                            <li class="dropdown-submenu">
+                                {% if not node.is_leaf_node %}
+                                    <a class="dropdown-item dropdown-toggle" href="{% url 'offers-category' node.url %}">{{ node.name }}</a>
+                                    {% drilldown_tree_for_node node as drilldown %}
+                                    <ul class="dropdown-menu">
+                                        {% for sub_node, structure in drilldown|tree_info %}
+                                            {% if sub_node.is_child_node %}
+                                                <a class="dropdown-item" href="{% url 'offers-category' sub_node.url %}">{{ sub_node.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endrecursetree %}
+                    </ul>
+                </li>
+
+                <li class="nav-item"> <a class="nav-link" href="{% url 'offers-about' %}">About</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'api-root' %}">API</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item mr-0">
+                        <span class="navbar-text">Hi there,&nbsp;</span><a class="navbar-text" href="{% url 'user-details' user.id %}">{{ user }}</a><span class="navbar-text mr-2">!</span>
+                    </li>
+                    <li class="nav-item">
+                        <span data-toggle="modal" data-target="#searchOfferModal">
+                            <button class="btn btn-block btn-warning" data-toggle="tooltip" data-placement="bottom" title="Search offers"><i class="fas fa-search"></i><span class="btn-text ml-1">Search offers</span></button>
+                        </span>
+                    </li>
+                    <li class="nav-item navbar-seperator"><a class="btn btn-warning" href="{% url 'offer' get_random_offer_id %}" data-toggle="tooltip" data-placement="bottom" title="Feeling lucky today?"><i class="fas fa-dice-six"></i><span class="btn-text ml-1">Open random offer</span></a></li>
+                    {% if user.is_superuser %}
+                        <li class="nav-item"><a class="btn btn-info" href="{% url 'admin:index' %}"><i class="fas fa-tools"></i><span class="btn-text ml-1">Django administration</span></a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="btn btn-warning" href="{% url 'offer-add' %}" data-toggle="tooltip" data-placement="bottom" title="New offer"><i class="fas fa-plus"></i><span class="btn-text ml-1">Add offer</span></a></li>
+                    <li class="nav-item"><a class="btn btn-warning" href="{% url 'conversations' %}" data-toggle="tooltip" data-placement="bottom" title="Conversations"><i class="fas fa-envelope"></i><span class="btn-text ml-1">Conversations</span></a></li>
+                    <li class="nav-item"><a class="btn btn-warning" href="{% url 'user-details' user.id %}" data-toggle="tooltip" data-placement="bottom" title="Your profile"><i class="fas fa-user"></i><span class="btn-text ml-1">Your profile</span></a></li>
+                    <li class="nav-item"><a class="btn btn-warning" href="{% url 'users-logout' %}" data-toggle="tooltip" data-placement="bottom" title="Log out"><i class="fas fa-power-off"></i><span class="btn-text ml-1">Log out</span></a></li>
+                {% else %}
+                    <li class="nav-item">
+                        <span data-toggle="modal" data-target="#searchOfferModal">
+                            <button class="btn btn-block btn-warning" data-toggle="tooltip" data-placement="bottom" title="Search offers"><i class="fas fa-search"></i><span class="btn-text ml-1">Search offers</span></button>
+                        </span>
+                    </li>
+                    <li class="nav-item navbar-seperator"><a class="btn btn-warning" href="{% url 'offer' get_random_offer_id %}" data-toggle="tooltip" data-placement="bottom" title="Feeling lucky today?"><i class="fas fa-dice-six"></i><span class="btn-text ml-1">Open random offer</span></a></li>
+                    <li class="nav-item"><a class="btn btn-warning" href="{% url 'users-register' %}">Join today</a></li>
+                    <li class="nav-item"><a class="btn btn-warning" href="{% url 'users-login' %}">Log in</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="container main-wrapper">
+        {% if messages %}
+            <div class="row mt-3">
+                <div class="col-sm">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="modal fade" id="searchOfferModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchOfferModalTitle">Search offers</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{% url 'offer-search' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            {{ offer_search_form.title }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" value="Search" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+</main>
+<footer class="py-3 bg-secondary">
+    <div class="row m-0">
+        <div class="col-sm">
+            <div class="text-center">
+                <span class="text-primary">&#169; 2020 Dawid Mszanowski</span>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script src="{% static 'fancybox/jquery.fancybox.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/multi_level_dropdown.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+</body>
+</html>

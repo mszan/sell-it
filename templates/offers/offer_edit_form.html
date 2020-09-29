@@ -1,0 +1,78 @@
+{# Offer edit form. #}
+
+{% extends 'offers/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="form">
+                <h2 class="mb-3">Editing <a href="{% url 'offer' offer_edit_form.instance.id %}">offer number {{ offer_edit_form.instance.id }}</a></h2>
+                <hr>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="h4 mb-3">General info </span><span class="h4 mb-3 text-secondary">— required</span><br><br>
+                            {{ offer_edit_form.title|as_crispy_field }}
+                            {{ offer_edit_form.category|as_crispy_field }}
+                            {{ offer_edit_form.condition|as_crispy_field }}
+                            {{ offer_edit_form.price|as_crispy_field }}
+                            {{ offer_edit_form.description|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            <span class="h4">Photos </span><span class="h4 mb-3 text-secondary">— not required</span><br><br>
+                            {% for image_form in offer_image_edit_forms %}
+                                <label class="" for="id_offer_image_add_form_{{ forloop.counter }}-image">Photo no. {{ forloop.counter }}:</label>
+                                <div class="input-group mb-3">
+                                    <div class="custom-file">
+                                        {{ image_form.image }}
+                                        <label class="custom-file-label" for="offer_image_add_form_{{ forloop.counter }}-image">
+                                            {% if image_form.image.value == 'images/offers/no_image.png' %}
+                                                Choose file
+                                            {% else %}
+                                                {{ image_form.image.value }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <hr>
+                    <input class="btn btn-primary mt-1" type="submit" value="Update offer">
+                    <label for="offer-edit-delete-images-all-submit" class="btn btn-danger mt-1 float-right" type="submit">Delete all photos</label>
+
+                </form>
+                <form method="POST" action="{% url 'offer-edit-delete-images-all' offer_edit_form.instance.id %}">
+                    {% csrf_token %}
+                    <input hidden id="offer-edit-delete-images-all-submit" type="submit">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        //Sets input field innerText (placeholder) to uploaded file name.
+        for(var i = 1; i < 6; i++) {
+            let iImage = `id_offer_image_add_form_${i}-image` // Image input field.
+            document.querySelector(`#${iImage}`).addEventListener('change', function (e) {
+                var fileName = document.getElementById(iImage).files[0].name;
+                var nextSibling = e.target.nextElementSibling
+                nextSibling.innerText = fileName
+            })
+        }
+
+        //Sets category dropdown to instance's category.
+        window.onload = function(){
+            catSelectEl = document.getElementById("id_category")
+            for(var i = 0; i < catSelectEl.length; i++){
+                if(catSelectEl.options[i].value === '{{ offer_edit_form.instance.category.name }}' ){
+                    catSelectEl.selectedIndex = i;
+                }
+            }
+        }
+    </script>
+
+{% endblock %}

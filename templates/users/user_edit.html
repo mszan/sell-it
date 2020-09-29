@@ -1,0 +1,104 @@
+{# User edit form. User password reset form.  #}
+
+{% extends "offers/base.html" %}
+{% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="row my-3">
+        <div class="col-xl-auto">
+            <img class="profile-picture-img" src="{% get_media_prefix %}{{ profile_user.userprofile.profile_picture }}" alt="{{ profile_user.userprofile }}">
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <a class="h4" href="{% url 'user-details' profile_user.id %}">{{ profile_user.username }}</a>
+                    <a class="h4">&#187;</a>
+                    <a class="h4">edit</a>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    Within this page you can edit your profile.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-xl-6 mb-3">
+            <div class="form">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h4>Details</h4>
+                    <div class="row">
+                        <div class="col-6">
+                            {{ user_edit_form.first_name|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            {{ user_edit_form.last_name|as_crispy_field }}
+                        </div>
+                    </div>
+                    {{ user_profile_edit_form.voivodeship|as_crispy_field }}
+                    {% if user_profile_edit_form.profile_picture.value != 'images/users/no_image.png' %}
+                        <label for="user-set-default-picture-submit" class="btn btn-xs btn-primary text-white" type="submit">Set default</label>
+                    {% endif %}
+                    {{ user_profile_edit_form.profile_picture.label_tag }}
+                    <div class="input-group">
+                        <div class="custom-file">
+                            {{ user_profile_edit_form.profile_picture }}
+                            <label class="custom-file-label" for="id_profile_picture">
+                                {% if user_profile_edit_form.profile_picture.value == 'images/users/no_image.png' %}
+                                    Choose file
+                                {% else %}
+                                    {{ user_profile_edit_form.profile_picture.value }}
+                                {% endif %}
+                            </label>
+                        </div>
+                    </div>
+                    <label class="mt-3" for="id_is_visible">Phone number:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <label for="id_is_visible" class="m-0">
+                                    {{ user_profile_edit_form.phone_number_visible }}
+                                    <span>Visible on your offers</span>
+                                </label>
+                            </div>
+                        </div>
+                        {{ user_profile_edit_form.phone_number }}
+                    </div>
+                    <input class="btn btn-primary mt-2" type="submit" value="Update">
+
+                </form>
+                <form method="POST" action="{% url 'user-set-default-picture' %}">
+                    {% csrf_token %}
+                    <input hidden id="user-set-default-picture-submit" type="submit">
+                </form>
+            </div>
+        </div>
+        <div class="col-xl-6 mb-3">
+            <div class="form h-100">
+                <h4>Password</h4>
+                <form method="POST" action="{% url 'user-password-change' %}">
+                    {% csrf_token %}
+                    {{ user_password_reset_form|crispy }}
+                    <input class="btn btn-primary mt-2" type="submit" value="Update">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        //Sets input field innerText (placeholder) to uploaded file name.
+        let inputEl = `id_profile_picture` // Image input field.
+        document.querySelector(`#${inputEl}`).addEventListener('change', function (e) {
+            var fileName = document.getElementById(inputEl).files[0].name;
+            var nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = fileName
+        })
+    </script>
+{% endblock content  %}

@@ -1,0 +1,22 @@
+# Project settings.
+sell_it/settings.py
+
+# Virtual environment.
+/venv
+
+# Bootstrap framework.
+/static/bootstrap
+
+# PyCharm's .idea folder.
+/.idea
+
+# GCP keys.
+/keys/sell_it_key.json
+
+# GCS SQL Proxy.
+/cloud_sql_proxy
+
+# Migrations folders.
+/offers/migrations
+/users/migrations
+/messages/migrations

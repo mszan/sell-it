@@ -1,0 +1,32 @@
+{# Displays login form. #}
+
+{% extends "offers/base.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class='row'>
+        <div class="col">
+            <div class="form">
+                <form method="POST" action="{% url 'users-login' %}">
+                    {% csrf_token %}
+                    <h4 class="mb-3">Login</h4>
+                    {{ form.username|as_crispy_field }}
+                    {{ form.password|as_crispy_field }}
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-check mr-1"></i><span>Login</span>
+                    </button>
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+
+                <hr>
+
+                <a href="{% url 'users-register' %}">
+                    <small>Do you need an account? Register here</small>
+                </a>
+                <a class="float-right" href="{% url 'user-password-reset' %}">
+                    <small>Did you forgot password? Reset it here</small>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock content  %}

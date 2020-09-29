@@ -1,0 +1,74 @@
+{# Offer add form; adding new offer form. #}
+
+{% extends 'offers/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="col-xl-12">
+            <div class='form'>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h2 class="mb-3">Adding new offer</h2>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="h4 mb-3">General info </span><span class="h4 mb-3 text-secondary">— required</span><br><br>
+                            {{ offer_add_form.title|as_crispy_field }}
+                            {{ offer_add_form.category|as_crispy_field }}
+                            {{ offer_add_form.condition|as_crispy_field }}
+                            {{ offer_add_form.price|as_crispy_field }}
+                            {{ offer_add_form.description|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            <span class="h4 mb-3">Photos </span><span class="h4 mb-3 text-secondary">— not required</span><br><br>
+                            {% for offer_image_add_form in offer_image_add_forms %}
+                                <a class="btn btn-xs btn-warning d-none" id="id_offer_image_add_form_{{ forloop.counter }}-addon">Clear</a>
+                                <label for="id_offer_image_add_form_{{ forloop.counter }}-image">Photo no. {{ forloop.counter }}:</label>
+                                <div class="input-group mb-3">
+                                    <div class="custom-file">
+                                        {{ offer_image_add_form.image }}
+                                        <label class="custom-file-label" for="offer_image_add_form_{{ forloop.counter }}-image">Choose file</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <hr>
+                    <input class="btn btn-primary mt-1" type="submit" value="Add offer">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //Sets input field innerText (placeholder) to uploaded file name and manipulates "Clear" button.
+        for(var i = 1; i < 6; i++) {
+            let iImage = `id_offer_image_add_form_${i}-image` // Image input field.
+            let iAddon = `id_offer_image_add_form_${i}-addon` // The "Clear" button.
+            document.querySelector(`#${iImage}`).addEventListener('change', function (e) {
+                var fileName = document.getElementById(iImage).files[0].name;
+                var nextSibling = e.target.nextElementSibling
+                nextSibling.innerText = fileName
+
+                var addonEl = document.getElementById(iAddon)
+                // Show "Clear" button.
+                addonEl.classList.remove("d-none")
+            })
+
+            document.getElementById(iAddon).addEventListener('click', function (e) {
+                // Set null input field value so no file is uploaded.
+                var fileInputEl = document.getElementById(iImage)
+                fileInputEl.value = null
+
+                // Set 'Choose file' input field label.
+                var fileInputLabel = fileInputEl.nextElementSibling
+                fileInputLabel.innerText = 'Choose file'
+
+                // Hide 'Clear' button.
+                document.getElementById(iAddon).classList.add("d-none")
+            })
+        }
+    </script>
+
+{% endblock %}

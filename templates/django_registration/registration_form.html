@@ -1,0 +1,33 @@
+{# User registration form. #}
+
+{% extends "offers/base.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class='row'>
+        <div class="col">
+            <div class='form'>
+                <form method="POST">
+                    {% csrf_token %}
+                    <h4 class="mb-3">Register</h4>
+                    {{ user_register_form.username|as_crispy_field }}
+                    {{ user_register_form.email|as_crispy_field }}
+                    {{ user_register_form.password1|as_crispy_field }}
+                    {{ user_register_form.password2|as_crispy_field }}
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-check mr-1"></i><span>Register</span>
+                    </button>
+                </form>
+
+                <hr>
+
+                <a href="{% url 'login' %}">
+                    <small>Already have an account? Login here</small>
+                </a>
+                <a class="float-right" href="{% url 'offers-about' %}">
+                    <small>Learn more about us</small>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock content  %}

@@ -1,0 +1,6 @@
+Dear {{ user }},
+
+Thank you for signing up to Sell it! We're happy you're here!
+
+Use link bellow to activate your account
+{{ scheme }}://{{ site }}{% url 'users-registration-activate' activation_key=activation_key %}

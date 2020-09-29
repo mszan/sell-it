@@ -1,0 +1,19 @@
+{# Activation failed with details. #}
+
+{% extends "offers/base.html" %}
+{% block content %}
+    <div class='content-section pt-3'>
+        <div class="alert alert-danger" role="alert">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <span class="alert-heading display-4">Something went wrong...</span>
+                </div>
+            </div>
+            <hr>
+            <span>Note: activation failed</span><br>
+            <span>Message: {{ activation_error.message }}</span><br>
+            <span>Code: {{ activation_error.code }}</span><br>
+            <span>Params: {{ activation_error.params }}</span>
+        </div>
+    </div>
+{% endblock content  %}

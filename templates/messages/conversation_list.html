@@ -1,0 +1,43 @@
+{# User conversation's list. #}
+
+{% extends 'offers/base.html' %}
+{% load humanize %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <div class="row mt-3">
+        <div class="col-xl-12">
+            <h1>Conversations</h1>
+        </div>
+        <div class="col">
+            Here you can find conversations you participate in.
+        </div>
+    </div>
+
+    <hr>
+
+    {% if conversations %}
+        <ul class="list-group">
+            {% for conversation in conversations %}
+                <a href="{% url 'conversation' conversation.id %}">
+                    <li class="list-group-item align-items-center cnv-banner mb-2">
+                        {# <span class="badge badge-primary badge-pill">New message!</span> #}
+                        <span class="font-weight-bold">{{ conversation.offer.title }}</span>
+                        {% if conversation.interlocutor_2 == user %}
+                            <span class="float-right">from <b>{{ conversation.interlocutor_1 }}</b>, last messaged {{ conversation.last_message.timestamp|naturaltime }}</span>
+                        {% else %}
+                            <span class="float-right">to <b>{{ conversation.interlocutor_1 }}</b>, last messaged {{ conversation.last_message.timestamp|naturaltime }}</span>
+                        {% endif %}
+                    </li>
+                </a>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="row mt-3">
+            <div class="col">
+                <h6>...and this is empty so far. Message someone to see your conversations.</h6>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

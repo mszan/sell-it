@@ -1,0 +1,194 @@
+{# Offer details. #}
+
+{% extends 'offers/base.html' %}
+{% load mptt_tags %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="col">
+            <h5>You are currently in:</h5>
+            <a href="{% url 'offers-home' %}">Home</a>
+            <span> &#187; </span>
+
+            {% drilldown_tree_for_node offer.category as nav_drilldown %}
+            {% for node, structure in nav_drilldown|tree_info %}
+                {% if node == offer.category %}
+                    <a href="{% url 'offers-category' node.url %}">{{ node.name }}</a>
+                    <span> &#187; </span>
+                    <span class="font-weight-bold">{{ offer.title }}</span>
+                {% else %}
+                    {% if not node.is_leaf_node %}
+                        <a href="{% url 'offers-category' node.url %}">{{ node.name }}</a>
+                        <span> &#187; </span>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row mt-3 mx-1">
+        <div class="col-xl-12 mb-3 px-0 d-flex justify-content-center">
+            <a data-fancybox="gallery" href="{% get_media_prefix %}{{ offer.images|first }}">
+                <div class="offer-details-img-wrapper-bg">
+                    <div class="offer-details-img-wrapper">
+                        <img class="img-fluid" src="{% get_media_prefix %}{{ offer.images|first }}" alt="{{ offer.images|first }}">
+                        <div class="offer-details-lookup-icon-wrapper d-flex justify-content-center">
+                            <i class="fas fa-search-plus fa-10x my-auto"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            {% for image in offer.images|slice:"1:" %}
+                <a data-fancybox="gallery" href="{% get_media_prefix %}{{ image }}"></a>
+            {% endfor %}
+            {#            </div>#}
+        </div>
+        <div class="col px-0">
+            {% if user == offer.owner %}
+                <div class="row">
+                    <div class="col-6">
+                        <a type="submit" class="btn btn-primary" href="{% url 'offer-edit' offer.id %}"><i class="fas fa-edit"></i><span class="ml-1">Edit</span></a>
+                        <a type="submit" class="btn btn-warning" href="{% url 'offer-delete' offer.id %}"><i class="fas fa-trash-alt"></i><span class="ml-1">Delete</span></a>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <a class="btn btn-primary" href="#" data-toggle="tooltip" data-placement="bottom" title="This feature will be available very soon."><i class="fas fa-share-alt mr-1"></i>Share</a>
+                        <a class="btn btn-primary ml-1" href="#" data-toggle="tooltip" data-placement="bottom" title="This feature will be available very soon."><i class="far fa-bookmark mr-1"></i>Save</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="row d-flex my-1">
+                    <div class="col-6">
+                        <span data-toggle="modal" data-target="#sendMessageModal">
+                            <button class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Click to send a message."><i class="fas fa-envelope mr-1"></i>Message</button>
+                        </span>
+                        {% if user.userprofile.phone_number.is_visible is True %}
+                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Click to see the number.">
+                                <i class="fas fa-phone-alt mr-1"></i><span id="phoneNumber">Call</span>
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-primary disabled" data-toggle="tooltip" data-placement="bottom" title="Number not available.">
+                                <i class="fas fa-phone-alt mr-1"></i><span id="phoneNumber">Call</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <a class="btn btn-primary" href="#" data-toggle="tooltip" data-placement="bottom" title="This feature will be available very soon."><i class="fas fa-share-alt mr-1"></i>Share</a>
+                        <a class="btn btn-primary ml-1" href="#" data-toggle="tooltip" data-placement="bottom" title="This feature will be available very soon."><i class="far fa-bookmark mr-1"></i>Save</a>
+                    </div>
+                </div>
+                <div class="modal fade" id="sendMessageModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Send message to {{ offer.owner }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    {{ message_send_form.text }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <input type="submit" value="Submit" class="btn btn-primary">
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <hr class="w-100">
+
+            <div class="row">
+                <div class="col">
+                    <h2 class="mb-2">{{ offer.title }}</h2>
+                </div>
+            </div>
+
+            {% if user != offer.owner and user.is_authenticated %}
+
+            {% endif %}
+
+            <div class="row">
+                <div class="col">
+                    <small>Price: ${{ offer.price|intcomma }}</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <small>Condition: {{ offer.condition }}</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <small>Owner: <a href="{% url 'user-details' offer.owner.id %}">
+                        {{ offer.owner }}
+                        {% if offer.owner.userprofile.is_online %}
+                            <span style="color: #57d438" data-toggle="tooltip" data-placement="bottom" title="Online">&#9673;</span>
+                        {% endif %}
+                    </a></small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <small>Added on: {{ offer.date_added }}</small>
+                </div>
+            </div>
+        </div>
+        <hr class="w-100">
+        <div class="row">
+            <div class="col">
+                {{ offer.description }}
+            </div>
+        </div>
+    </div>
+
+    {#    Random user offers.#}
+    <div class="row">
+        <div class="col">
+            <hr class="w-100">
+            {% if random_user_offers %}
+                <div class="mb-3">
+                    <h3>Other offers posted by {{ offer.owner }}</h3>
+                </div>
+                {% for offer in random_user_offers %}
+                    <div class="row offer-wrapper">
+                        <div class="col-md-4 p-0 offer-img-box">
+                            <a href="{% url 'offer' offer.id %}">
+                                <div class="offer-img" style="background-image: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,0)), url({% get_media_prefix %}{{ offer.thumbnail }});"></div>
+                            </a>
+                        </div>
+                        <div class="col-md-8 py-3 offer-info">
+                            <a class="font-weight-bold h3" href="{% url 'offer' offer.id %}">{{ offer.title }}</a>
+                            <hr>
+                            <small class="card-text">{{ offe.description|truncatewords:50 }}<a href="{% url 'offer' offer.id %}"> Read more</a></small>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h3>User <strong>{{ offer.owner }}</strong> has no other offers.</h3>
+            {% endif %}
+        </div>
+    </div>
+
+
+    {% if user.userprofile.phone_number.is_visible is True %}
+        <script type="text/javascript">
+            var phoneNumber = '{{ user.userprofile.phone_number.number }}'
+            var phoneNumberSpan = document.getElementById('phoneNumber')
+            phoneNumberSpan.addEventListener('click', function(){this.textContent = phoneNumber;});
+        </script>
+    {% endif %}
+
+
+{% endblock %}

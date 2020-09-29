@@ -1,0 +1,37 @@
+{# About page. #}
+
+{% extends 'offers/base.html' %}
+{% block content %}
+{% load static %}
+    <div class="row">
+        <div class="col mt-3">
+            <h1 class="display-3">Here it is, an about page!</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tristique facilisis tellus, ac interdum eros mollis vestibulum. Nunc consequat velit a lorem aliquam ornare. Aenean vitae sapien sed ipsum blandit hendrerit. Donec a tortor sapien. Suspendisse tincidunt vestibulum aliquet. Quisque gravida in lorem sit amet pulvinar.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-lg-4 about-man">
+            <img class="about-man-img" src="{% static 'img/examples/man_1.jpeg' %}" alt="John">
+            <h2>John</h2>
+            <p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+            <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+        </div>
+
+        <div class="col-lg-4 about-man">
+            <img class="about-man-img" src="{% static 'img/examples/man_2.png' %}" alt="Trevor">
+            <h2>Trevor</h2>
+            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+            <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+        </div>
+
+        <div class="col-lg-4 about-man">
+            <img class="about-man-img" src="{% static 'img/examples/man_3.png' %}" alt="Brian">
+            <h2>Brian</h2>
+            <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor nibh, massa justo sit amet risus.</p>
+            <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+        </div>
+    </div>
+{% endblock %}

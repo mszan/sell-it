@@ -1,0 +1,106 @@
+{# User profile details. #}
+
+{% extends "offers/base.html" %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="row my-3">
+        <div class="col-xl-auto">
+            <img class="profile-picture-img" src="{% get_media_prefix %}{{ user_profile.profile_picture }}" alt="{{ user_profile.user.username }}">
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    {% if user_profile.is_online %}
+                        <span style="color: #57d438" data-toggle="tooltip" data-placement="bottom" title="Online">&#9673;</span>
+                    {% else %}
+                        <span style="color: #525252" data-toggle="tooltip" data-placement="bottom" title="Last seen {{ user_profile.user.last_login }}">&#9673;</span>
+                    {% endif %}
+                    <a class="h4 mr-1" href="{% url 'user-details' user_profile.user_id %}">{{ user_profile.user.username }}</a>
+                    {% if user_profile.user.first_name and not user_profile.user.last_name %}
+                        <span class="h4 text-secondary">— {{ user_profile.user.first_name }}</span>
+                    {% elif user_profile.user.first_name and user_profile.user.last_name %}
+                        <span class="h4 text-secondary">— {{ user_profile.user.first_name }} {{ user_profile.user.last_name }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    Registered {{ user_profile.user.date_joined|naturaltime }}<br>
+                    Lives in {{ user_profile.get_voivodeship_display }}<br>
+                    Has {{ offers|length }} active offers
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if user == user_profile.user %}
+        <div class="row">
+            <div class="col">
+                <a class="btn btn-warning" href="{% url 'offer-add' %}" data-toggle="tooltip" data-placement="bottom" title="New offer"><i class="fas fa-plus"></i></a>
+                <a class="btn btn-warning" href="{% url 'conversations' %}" data-toggle="tooltip" data-placement="bottom" title="Messages"><i class="fas fa-envelope"></i></a>
+                <a class="btn btn-secondary" href="{% url 'user-edit' user_profile.user_id %}" data-toggle="tooltip" data-placement="bottom" title="Edit profile"><i class="fas fa-edit"></i></i></a>
+            </div>
+        </div>
+
+    {% endif %}
+    {% if offers %}
+        <hr>
+        <div class="row px-3 mb-1">
+            <h5>User's active offers:</h5>
+        </div>
+        {% for offer in offers %}
+            <div class="row offer-wrapper">
+                <div class="col-md-4 p-0 offer-img-box">
+                    <a href="{% url 'offer' offer.id %}">
+                        <div class="offer-img" style="background-image: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,0)), url({% get_media_prefix %}{{ offer.thumbnail }});"></div>
+                    </a>
+                </div>
+                <div class="col-md-8 py-3 offer-info">
+                    <a class="font-weight-bold h3" href="{% url 'offer' offer.id %}">{{ offer.title }}</a>
+                    <hr>
+                    <small class="card-text">{{ offer.description|truncatewords:50 }}<a href="{% url 'offer' offer.id %}"> Read more</a></small>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if is_paginated %}
+        <div class="row d-flex justify-content-center">
+            <div class="col-xs-auto">
+                <ul class="pagination justify-content-end">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="?page=#">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content  %}

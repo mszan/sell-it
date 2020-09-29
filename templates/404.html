@@ -1,0 +1,16 @@
+{# Overrided error code 403 template. #}
+
+{% extends "offers/base.html" %}
+{% block content %}
+    <div class='content-section pt-3'>
+        <div class="alert alert-danger" role="alert">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <span class="alert-heading display-4">404 - Page Not Found</span>
+                </div>
+            </div>
+            <hr>
+            <span>Looks like the page you were looking for is no longer here :(</span><br>
+        </div>
+    </div>
+{% endblock content  %}

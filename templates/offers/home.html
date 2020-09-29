@@ -1,0 +1,86 @@
+{# Home page. #}
+
+{% extends 'offers/base.html' %}
+{% load mptt_tags %}
+{% load static %}
+{% block content %}
+    {# Search box. #}
+    <div class="row justify-content-center">
+        <div class="col mb-2">
+            <form action="{% url 'offer-search' %}"  method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    {{ offer_search_form.title }}
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Search offers</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    {# List of categories with images. #}
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h3>Main categories: </h3>
+            {% recursetree categories %}
+                {% if not node.is_leaf_node %}
+                    <a href="{% url 'offers-category' node.url %}" class="list-group-item category-big-a list-group-item-action flex-column align-items-start my-1 p-0">
+                        <div class="p-3 my-3 category-big-img" style="background-image: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url({% get_media_prefix %}{{ node.thumbnail }});">
+                            <h5 class="mb-1">{{ node.name }}</h5>
+                            <small>{{ node.desc }}</small>
+                        </div>
+                    </a>
+                {% endif %}
+            {% endrecursetree %}
+        </div>
+    </div>
+
+    <hr>
+
+    {# Carousel of recently added offers. #}
+    <div class="row justify-content-center">
+        <div class="col-xl-12">
+            <h3 class="mb-3">Recently added offers: </h3>
+            <div id="carouselIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    {#<li data-target="#carouselIndicators" data-slide-to="1" class="active"></li>#}
+                    {% for offer in recent_offers %}
+                        {#<li data-target="#carouselIndicators" data-slide-to="1"></li>#}
+                    {% endfor %}
+                </ol>
+
+                <div class="carousel-inner">
+                    {% for offer in recent_offers %}
+                        {% if forloop.first %}
+                            <div class="carousel-item active">
+                        {% else %}
+                            <div class="carousel-item">
+                        {% endif %}
+                    <a href="{% url 'offer' offer.id %}">
+                        <div class="carousel-caption mb-1">
+                            <h5>{{ offer.title }} | ${{ offer.price }}</h5>
+                            <small>{{ offer.description|truncatewords:10 }}</small>
+                        </div>
+                        <div class="carousel-img" style="background-image: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url({% get_media_prefix %}{{ offer.images|first }});"></div>
+                    </div>
+                        </a>
+
+                    {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

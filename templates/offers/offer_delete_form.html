@@ -1,0 +1,20 @@
+{# Delete offer form. #}
+
+{% extends 'offers/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="col-xl-12">
+            <h2 class="mb-3">Delete offer</h2>
+            <hr>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ offer_add_form.id }}">
+                <h5>Are you sure? This can't be undone.</h5>
+                <input class="btn btn-primary mt-1" type="submit" value="Delete">
+            </form>
+        </div>
+    </div>
+{% endblock %}

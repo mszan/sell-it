@@ -1,0 +1,61 @@
+{# Conversation details. #}
+
+{% extends 'offers/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <div class="row mt-3">
+        <div class="col-xl-12">
+            <h1>Conversation with <a href="{% url 'user-details' recipient.id %}">{{ recipient }}</a></h1>
+        </div>
+        <div class="col">
+            Related to offer <a href="{% url 'offer' conversation.offer.id %}">{{ conversation.offer.title }}</a>
+        </div>
+    </div>
+
+    <hr class="mb-0">
+
+    <div class="cnv-wrapper">
+        <div class="cnv-history">
+            {% for user_message in user_messages %}
+                {% if user_message.owner == user %}
+                    <div class="msg-outgoing-wrapper">
+                        <div class="msg-outgoing-text-wrapper">
+                            <div class="msg-outgoing-text">
+                                <p>{{ user_message.text }}</p>
+                            </div>
+                        </div>
+                        <div class="msg-outgoing-date">
+                            <span class="msg-time-date">{{ user_message.timestamp|naturaltime }} by <a href="{% url 'user-details' user_message.owner_id %}">{{ user_message.owner }}</a></span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="msg-incoming-wrapper">
+                        <div class="msg-incoming-text-wrapper">
+                            <div class="msg-incoming-text">
+                                <p>{{ user_message.text }}</p>
+                            </div>
+                            <div>
+                                <span class="msg-time-date">{{ user_message.timestamp|naturaltime }} by <a href="{% url 'user-details' user_message.owner_id %}">{{ user_message.owner }}</a></span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <hr>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+                {{ message_send_form.text }}
+                <div class="input-group-append">
+                    <input class="btn btn-primary" type="submit" value="Send">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

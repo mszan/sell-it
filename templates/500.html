@@ -1,0 +1,17 @@
+{# Overrided error code 403 template. #}
+
+{% extends "offers/base.html" %}
+{% block content %}
+    <div class='content-section pt-3'>
+        <div class="alert alert-danger" role="alert">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <span class="alert-heading display-4">505 - Internal Server Error</span>
+                </div>
+            </div>
+            <hr>
+            <span>Seems like something is not working. We are working hard on this.</span><br>
+            <span>...and don't worry, it's not your fault!</span><br>
+        </div>
+    </div>
+{% endblock content  %}
