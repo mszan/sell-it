@@ -55,7 +55,7 @@
                 <div class="col-md-8 py-3 offer-info">
                     <a class="font-weight-bold h3" href="{% url 'offer' offer.id %}">{{ offer.title }}</a>
                     <hr>
-                    <small class="card-text">{{ offe.description|truncatewords:50 }}<a href="{% url 'offer' offer.id %}"> Read more</a></small>
+                    <small class="card-text">{{ offer.description|truncatewords:50 }}<a href="{% url 'offer' offer.id %}"> Read more</a></small>
                 </div>
             </div>
         {% endfor %}
