@@ -28,6 +28,7 @@ Live web demo is available at [sell-it.mszanowski.pl](https://sell-it.mszanowski
 | django-storages     | 1.10.1  |
 | djangorestframework | 3.11.1  |
 | psycopg2-binary     | 2.8.5   |
+
 [requirements.txt](requirements.txt).
 
 ### External libraries
