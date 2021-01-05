@@ -4,8 +4,9 @@ sell_it/settings.py
 # Virtual environment.
 /venv
 
-# Bootstrap framework.
+# Static files.
 /static/bootstrap
+/static/CACHE
 
 # PyCharm's .idea folder.
 /.idea
