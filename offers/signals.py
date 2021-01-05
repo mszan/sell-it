@@ -37,17 +37,13 @@ def create_thumbnail(sender, instance, created, **kwargs):
             pass
         else:
             # If first image is found, create thumbnail.
-            img_url = f"{settings.MEDIA_URL}{img_instance.image.name}"
-            response = requests.get(img_url)
-            img = Image.open(BytesIO(response.content))
-            img_instance.image.name = img_instance.image.name.replace(f'image_{instance.index}', 'image_0')
+            img = Image.open(img_instance.image)
+            img_instance.image.name = img_instance.image.name.replace(f'image_1', 'image_0')
 
-            img_buffer = BytesIO()
             img.thumbnail((400, 250))
-            img.save(img_buffer, format="JPEG")
-            img_file = default_storage.open(img_instance.image.name, 'wb')
-            img_file.write(img_buffer.getvalue())
-            img_file.flush()
-            img_file.close()
+            # img = img.convert("RGB")
+            # f"{settings.MEDIA_URL}{img_instance.image.name}"
+            print("DDDDD", img_instance.image.path)
+            img.save(img_instance.image.path)
 
             OfferImage.objects.create(index=0, offer=instance.offer, image=img_instance.image)
