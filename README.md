@@ -3,22 +3,16 @@
 Selll it! is an online marketplace web application built with Django 3.1 that handles offers announcements displaying and allows their management.
 ![](https://i.imgur.com/lYjxzSj.png)
 
+It has been hosted on VPS (nginx & gunicorn).
+
 ## Live demo
 Live web demo is available at [sell-it.mszanowski.pl](https://sell-it.mszanowski.pl).
-### Description
-- Hosted on [GAE](https://cloud.google.com/appengine).
-- Media and static handled by [Cloud Storage](https://cloud.google.com/storage/docs/introduction).
-- SQL uses Cloud SQL Proxy as described [here](https://cloud.google.com/python/django/appengine#installingthecloudsqlproxy).
 
 ## Structure
 ### Django apps
 - **Offers** - displaying, adding, modifying and deleting offers
 - **Users** - user registration, login
 - **Messages** - conversations between users
-### API - DRF
-Available at [sell-it.mszanowski.pl/api](https://sell-it.mszanowski.pl/api) as a browsable API.
-- For now it  handles only `GET`, `HEAD` and `OPTIONS` methods with basic access authentication.
-- API has not been seperated to another app yet.
 
 ## Requirements
 
@@ -35,7 +29,7 @@ Available at [sell-it.mszanowski.pl/api](https://sell-it.mszanowski.pl/api) as a
 | djangorestframework | 3.11.1  |
 | psycopg2-binary     | 2.8.5   |
 
-Full `pip freeze` can be found in [requirements.txt](requirements.txt).
+[requirements.txt](requirements.txt).
 
 ### External libraries
 
