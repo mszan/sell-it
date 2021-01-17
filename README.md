@@ -1,14 +1,36 @@
-# SELL IT!
+# Sell it!
+## Table of contents
+* [General info](#general-info)
+* [Live demo](#live-demo)
+* [Features](#features)
+* [Structure](#structure)
+  * [Description](#description)
+  * [Django apps](#django-apps)
+* [Requirements](#requirements)
+  * [Python packages](#python-packages)
+  * [External libraries](#external-libraries)
 
-Selll it! is an online marketplace web application built with Django 3.1 that handles offers announcements displaying and allows their management.
+## General info
+*Sell it!* is an online marketplace web application built with Django that handles offers announcements displaying and allows their management.
 ![](https://i.imgur.com/lYjxzSj.png)
-
-It has been hosted on VPS (nginx & gunicorn).
 
 ## Live demo
 Live web demo is available at [sell-it.mszanowski.pl](https://sell-it.mszanowski.pl).
+Website is hosted on VPS (nginx, gunicorn).
+
+## Features
+- Website is fully responsive - mobile, tablet, desktop;
+- Users can add, modify and delete their offers,
+- Users can manage their profile's details and visibility,
+- Users can message other users,
+- Administrators can manage offers and users through customised Django admin site,
 
 ## Structure
+### Description
+This website is based on Django (both backend and frontend) and is divided into two main parts:
+* **public** - place where people can browse, add, modify and delete offers
+* **admin** - place where an administrator can manage the content (it is basically a modifed built-in Django's admin site)
+
 ### Django apps
 - **Offers** - displaying, adding, modifying and deleting offers
 - **Users** - user registration, login
