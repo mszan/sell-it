@@ -1,14 +1,4 @@
 # Sell it!
-## Table of contents
-* [General info](#general-info)
-* [Live demo](#live-demo)
-* [Features](#features)
-* [Structure](#structure)
-  * [Description](#description)
-  * [Django apps](#django-apps)
-* [Requirements](#requirements)
-  * [Python packages](#python-packages)
-  * [External libraries](#external-libraries)
 
 ## General info
 *Sell it!* is an online marketplace web application built with Django that handles offers announcements displaying and allows their management.
