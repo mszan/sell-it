@@ -1,0 +1,26 @@
+services:
+    postgres:
+      container_name: sell-it_postgres
+      restart: always
+      image: "postgres:13-alpine"
+      environment:
+        - POSTGRES_PASSWORD=postgres
+      volumes:
+        - ./postgres/data:/var/lib/postgresql/data
+      ports:
+        - 4051:5432
+      healthcheck:
+        test: "pg_isready -U postgres"
+        timeout: 5s
+        retries: 3
+
+    django:
+      container_name: sell-it_django
+      restart: always
+      build: .
+      command: python manage.py runserver 0.0.0.0:8000
+      ports:
+        - 4050:8000
+      depends_on:
+        postgres:
+          condition: service_healthy

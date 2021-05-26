@@ -1,23 +1,15 @@
-# Project settings.
-sell_it/settings.py
-
 # Virtual environment.
-/venv
+venv
 
 # Static files.
-/static/bootstrap
 /static/CACHE
+static_collected
 
-# PyCharm's .idea folder.
-/.idea
+# VSCode
+.vscode
+.history
 
-# GCP keys.
-/keys/sell_it_key.json
+# Docker
+postgres
 
-# GCS SQL Proxy.
-/cloud_sql_proxy
-
-# Migrations folders.
-/offers/migrations
-/users/migrations
-/messages/migrations
+# Other
