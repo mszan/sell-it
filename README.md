@@ -4,10 +4,6 @@
 *Sell it!* is an online marketplace web application built with Django that handles offers announcements displaying and allows their management.
 ![](https://i.imgur.com/lYjxzSj.png)
 
-## Live demo
-Live web demo is available at [sell-it.mszanowski.pl](https://sell-it.mszanowski.pl).
-Website is hosted on VPS (nginx, gunicorn).
-
 ## Features
 - Website is fully responsive - mobile, tablet, desktop;
 - Users can add, modify and delete their offers,
