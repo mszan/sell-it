@@ -1,0 +1,44 @@
+networks:
+  sell-it-network-default:
+
+volumes:
+  postgres-data:
+    name: sell-it-postgres-data
+
+services:
+  db:
+    container_name: sell-it-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    image: "postgres:16.1"
+    ports:
+      - 4051:5432
+    networks:
+      - sell-it-network-default
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  django:
+    build:
+      context: ./django
+      dockerfile: ./docker/dev.Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    # command: tail -f /dev/null # keep container running
+    container_name: sell-it-django
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PYTHONUNBUFFERED: 1 # prevents Python from buffering stdout and stderr (equivalent to python -u option)
+    networks:
+      - sell-it-network-default
+    ports:
+      - 4050:8000
+    restart: always
+    volumes:
+      - ./django/source:/app

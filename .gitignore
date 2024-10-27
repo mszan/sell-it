@@ -1,15 +1,10 @@
-# Virtual environment.
-venv
+# common
+**/.history
+**/.DS_Store
+**/*.env
+**/venv/
+**/*.venv/
 
-# Static files.
-/static/CACHE
-static_collected
-
-# VSCode
-.vscode
-.history
-
-# Docker
-postgres
-
-# Other
+# django
+django/static/CACHE
+django/static_collected
